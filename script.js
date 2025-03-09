@@ -139,31 +139,26 @@
 // })
 
 const express = require('express');
+const path = require('path')
 const app = express();
 
 // Middleware to parse JSON bodies
 app.use(express.json());  // For parsing application/json
+app.use(express.urlencoded({ extended : true}))
+app.set('view engine' , 'ejs')
+app.use(express.static(path.join(__dirname , 'public')))
 
-// POST request on /about
-app.post('/about', (req, res) => {
-    // Request body se data lene ka tareeqa
-    const { name, age } = req.body;
+app.get('/' , function(req,res){
+res.render("index")
+})
+//agr kisi rout ko dynamic bnana hy to : ka use kren is se profile k bad koi bhi khud se rout deny se chal jae ga error nahi aey ga kiyun k ye ab variable ban chuka hy
+app.get('/profile/:anybody' , function(req,res){
+    //agr humain front ka data yani user jo rout open kary ga wo backend se dobara front end par aey to
 
-    // Data ko process karke response bhejna
-    if (name && age) {
-        res.status(200).send({
-            message: 'Data received successfully',
-            receivedData: { name, age }
-        });
-    } else {
-        res.status(400).send({
-            message: 'Name and Age are required'
-        });
-    }
-});
+    res.send(`welcome ${req.params.anybody} to create rout`)
+    })
 
-// Server listening on a port
-const PORT = 3000;
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+app.listen(3000 , function(){
+    console.log("server in running");
+    
+})

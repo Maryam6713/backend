@@ -138,9 +138,40 @@
 //   console.log(`Example app listening on port ${port}`)
 // })
 
+//=============Date 9 march 2025 Sunday
+
+// const express = require('express');
+// const path = require('path')
+// const app = express();
+
+// // Middleware to parse JSON bodies
+// app.use(express.json());  // For parsing application/json
+// app.use(express.urlencoded({ extended : true}))
+// app.set('view engine' , 'ejs')
+// app.use(express.static(path.join(__dirname , 'public')))
+
+// app.get('/' , function(req,res){
+// res.render("index")
+// })
+// //agr kisi rout ko dynamic bnana hy to : ka use kren is se profile k bad koi bhi khud se rout deny se chal jae ga error nahi aey ga kiyun k ye ab variable ban chuka hy
+// app.get('/profile/:anybody' , function(req,res){
+//     //agr humain front ka data yani user jo rout open kary ga wo backend se dobara front end par aey to
+
+//     res.send(`welcome ${req.params.anybody} to create rout`)
+//     })
+
+// app.listen(3000 , function(){
+//     console.log("server in running");
+    
+// })
+
+//======Date 10 March 2025 Monday
+
 const express = require('express');
 const path = require('path')
 const app = express();
+ const fs = require('fs');
+
 
 // Middleware to parse JSON bodies
 app.use(express.json());  // For parsing application/json
@@ -149,16 +180,23 @@ app.set('view engine' , 'ejs')
 app.use(express.static(path.join(__dirname , 'public')))
 
 app.get('/' , function(req,res){
-res.render("index")
-})
-//agr kisi rout ko dynamic bnana hy to : ka use kren is se profile k bad koi bhi khud se rout deny se chal jae ga error nahi aey ga kiyun k ye ab variable ban chuka hy
-app.get('/profile/:anybody' , function(req,res){
-    //agr humain front ka data yani user jo rout open kary ga wo backend se dobara front end par aey to
-
-    res.send(`welcome ${req.params.anybody} to create rout`)
+    fs.readdir('./files' , function(err , files){
+        res.render('index' , {files:files}) 
+        
+    })
+       
+        
     })
 
-app.listen(3000 , function(){
-    console.log("server in running");
-    
-})
+    app.post('/create' , function(req,res){
+
+fs.writeFile(`./files/${req.body.title.split(' ').join('').txt}` , req.body.details , function(err){
+res.redirect('/')
+})   
+        })
+   
+   
+    app.listen(3000 , function(){
+        console.log("server in running");
+        
+    })

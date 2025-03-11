@@ -4,11 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="/stylesheets/style.css">
+    <!-- <link rel="stylesheet" href="/stylesheets/style.css"> -->
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
 </head>
 <body>
-    <h1>ejs is running</h1>
-    <h1><%= 15+5 %></h1>
+   <div class="main w-full min-h-screen  bg-zinc-900">
+    <div class="form p-20 text-white">
+        <form action="/create" method="post">
+            <input type="text" placeholder="Title goes here" class="block px-5 py-2 bg-zinc-800 w-full rounded-md outline-none" name="title">
+            <textarea placeholder="write your task detail here" class="block px-5 py-2 bg-zinc-800 resize-none mt-5 w-full rounded-md outline-none" name="details"></textarea>
+            <input type="submit" value="Create task" class="mt-3 bg-pink-600 px-5 py-2 rounded-md">
+        </form>
+    </div>
+    <div class="tasks p-20 flex gap-3 flex-wrap">
+        <% if(files.length > 0){ %>
+            <% files.forEach(function(val){ %>
+                <div class="task w-72 px-3 py-4 bg-zinc-800 rounded-md ">
+                    <h1 class="text-white text-3xl tracking-tighter">Somes wites goes here</h1>
+                    <a class="text-pink-600 inline-block mt-3">Read more</a>
+                </div>
+        
+                   
+                <% }) %>
+        <% } else { %>
+            <h1 class="text-white text-3xl tracking-tighter">No Task yet.</h1>
+            <%  } %>
+        
+       
+        
+       
+    </div>
+   </div>
+    
 </body>
 </html>

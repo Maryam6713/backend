@@ -168,35 +168,53 @@
 //======Date 10 March 2025 Monday
 
 const express = require('express');
-const path = require('path')
+const path = require('path');
+const fs = require('fs');
 const app = express();
- const fs = require('fs');
-
 
 // Middleware to parse JSON bodies
 app.use(express.json());  // For parsing application/json
-app.use(express.urlencoded({ extended : true}))
-app.set('view engine' , 'ejs')
-app.use(express.static(path.join(__dirname , 'public')))
+app.use(express.urlencoded({ extended : true }));
+app.set('view engine', 'ejs');
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/' , function(req,res){
-    fs.readdir('./files' , function(err , files){
-        res.render('index' , {files:files}) 
-        
-    })
-       
-        
-    })
+app.get('/', function(req, res) {
+    fs.readdir('./files', function(err, files) {
+        if (err) {
+            return res.status(500).send("Error reading files directory");
+        }
+        res.render('index', { files: files });
+    });
+});
 
-    app.post('/create' , function(req,res){
 
-fs.writeFile(`./files/${req.body.title.split(' ').join('').txt}` , req.body.details , function(err){
-res.redirect('/')
-})   
-        })
-   
-   
-    app.listen(3000 , function(){
-        console.log("server in running");
-        
-    })
+app.get('/files/:filename' , function(req,res){
+fs.readFile(`./files/${req.params.filename }`, "utf-8" , function(err , filedata){
+res.render("show" , {filename:req.params.filename , fileData:req.params.filedata})
+})
+})
+
+app.post('/create', function(req, res) {
+    // Ensure title is sanitized for use in the file name
+    const title = req.body.title ? req.body.title.split(' ').join('') : 'untitled'; // Default to 'untitled' if title is empty
+    const fileName = `./files/${title}.txt`;
+
+    // Ensure the folder exists before writing the file
+    fs.mkdir('./files', { recursive: true }, function(err) {
+        if (err) {
+            return res.status(500).send("Error creating directory");
+        }
+
+        // Write the file
+        fs.writeFile(fileName, req.body.details, function(err) {
+            if (err) {
+                return res.status(500).send("Error writing file");
+            }
+            res.redirect('/');
+        });
+    });
+});
+
+app.listen(3000, function() {
+    console.log("Server is running on port 3000");
+});

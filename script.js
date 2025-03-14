@@ -188,11 +188,38 @@ app.get('/', function(req, res) {
 });
 
 
-app.get('/files/:filename' , function(req,res){
-fs.readFile(`./files/${req.params.filename }`, "utf-8" , function(err , filedata){
-res.render("show" , {filename:req.params.filename , fileData:req.params.filedata})
+app.get('/files/:filename', function(req, res) {
+    const filePath = `./files/${req.params.filename}`;
+    fs.readFile(filePath, "utf-8", function(err, filedata) {
+        if (err) {
+            return res.status(500).send("Error reading file");
+        }
+        // Pass the file content (filedata) to the 'show' view
+        res.render("show", { filename: req.params.filename, filedata: filedata });
+    });
+});
+app.get('/edit/:filename' , function(req , res){
+    res.render('edit' , {filename: req.params.filename})
 })
-})
+
+app.post('/edit', function(req, res) {
+    const { previous, new: newFilename } = req.body;
+
+    // Ensure both filenames are provided
+    if (!previous || !newFilename) {
+        return res.status(400).send("Both previous and new filenames are required.");
+    }
+
+    // Rename the file
+    fs.rename(`./files/${previous}`, `./files/${newFilename}`, function(err) {
+        if (err) {
+            return res.status(500).send("Error renaming file.");
+        }
+        res.redirect('/');
+    });
+});
+
+
 
 app.post('/create', function(req, res) {
     // Ensure title is sanitized for use in the file name
